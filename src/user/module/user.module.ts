@@ -7,8 +7,7 @@ import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports : [JwtModule.register({
-    secret : 'BCRYPT_SECRET_KEY',
-    signOptions: {expiresIn : '15m'}
+    secret : 'BCRYPT_SECRET_KEY'
   }),TypeOrmModule.forFeature([User])],
   controllers : [UserController],
   providers : [UserService],

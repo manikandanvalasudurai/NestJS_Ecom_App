@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/module/user.module';
 import { ProductModule } from './product/module/product.module';
 import { CartModule} from './cart/module/cart.module';
-import { AuthModule } from './auth/model/auth.module';
+import { AuthModule } from './auth/module/auth.module';
 @Module({
   imports: [TypeOrmModule.forRoot({
       type : 'mysql',
