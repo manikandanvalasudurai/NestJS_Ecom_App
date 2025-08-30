@@ -3,9 +3,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/typeorm/entities/User';
 import { UserController } from '../controller/user.controller';
 import { UserService } from '../service/user.service';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
-  imports : [TypeOrmModule.forFeature([User])],
+  imports : [JwtModule.register({
+    secret : 'BCRYPT_SECRET_KEY',
+    signOptions: {expiresIn : '15m'}
+  }),TypeOrmModule.forFeature([User])],
   controllers : [UserController],
   providers : [UserService],
   exports : [UserService], //validators requires
