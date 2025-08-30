@@ -1,24 +1,23 @@
-import { IsString , IsNotEmpty , IsEmail , Validate, isMobilePhone } from "class-validator";
+import { IsString , IsNotEmpty , IsEmail , Validate, IsNumber } from "class-validator";
 import { IsEmailUnique } from 'src/common/validators/is-email-unique.validator';
 import { IsMobileNoUnique } from 'src/common/validators/is-mobileNo-unique.validator';
 
-export class RegisterUserDto{
-    @IsString()
-    @IsNotEmpty()
-    userName: string;
+export class RegisterUserDto {
+  @IsString()
+  @IsNotEmpty()
+  username: string;
 
-    @IsEmail()
-    @IsNotEmpty()
-    @Validate(IsEmailUnique)
-    eMail: string;
+  @IsEmail()
+  @IsNotEmpty()
+  @Validate(IsEmailUnique)
+  email: string;
 
-    @IsString()
-    @IsNotEmpty()
-    @Validate(IsMobileNoUnique)
-    mobileNo: string;
+  @IsNumber()
+  @IsNotEmpty()
+  @Validate(IsMobileNoUnique)
+  mobileNo: number;
 
-    @IsString()
-    @IsNotEmpty()
-    password: string;
-
+  @IsString()
+  @IsNotEmpty()
+  password: string;
 }

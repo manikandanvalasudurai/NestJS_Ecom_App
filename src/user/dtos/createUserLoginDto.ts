@@ -12,7 +12,7 @@ export class CreateUserLoginDto{
     @IsNumber()
     @IsNotEmpty()
     @Validate(IsMobileNoUnique)
-    mobileNo: number;
+    mobileno: number;
 
     @IsString()
     @IsNotEmpty()

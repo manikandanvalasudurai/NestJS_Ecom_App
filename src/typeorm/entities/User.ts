@@ -2,27 +2,19 @@ import { IsEmail, IsNotEmpty, IsNumber, IsString, Validate , } from "class-valid
 import { Column, Entity,PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({ name : 'users'})
-export class User{
-    @PrimaryGeneratedColumn()
-    id : number
+export class User {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @IsString()
-    @IsNotEmpty()
-    @Column()
-    username : string
+  @Column()
+  username: string;
 
-    @IsEmail()
-    @IsNotEmpty()
-    @Column()
-    email : string
+  @Column()
+  email: string;
 
-    @IsNumber()
-    @IsNotEmpty()
-    @Column()
-    mobileNo : number
+  @Column({ type: 'bigint' })
+  mobileNo: number;
 
-    @IsString()
-    @IsNotEmpty()
-    @Column()
-    password : string
+  @Column()
+  password: string;
 }
