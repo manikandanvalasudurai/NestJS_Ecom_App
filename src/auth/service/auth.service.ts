@@ -13,6 +13,10 @@ export class AuthService {
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
 
+  async findAllUsers(){
+    return await this.userRepository.find();
+  }
+
   async loginByEmail(email: string, password: string) {
     const user = await this.userRepository.findOne({ where: { email } });
     if (!user) {
@@ -32,7 +36,7 @@ export class AuthService {
       });
     }
 
-    const payload = { sub: user.id, email: user.email };
+    const payload = { sub: user.id, email: user.email, role: user.role };
     const token = await this.jwt.signAsync(payload, {
       expiresIn: '15m',
       secret: JWT_SECRET_KEY,
@@ -40,7 +44,7 @@ export class AuthService {
     return {
       statusCode: 201,
       message: 'Login successful',
-      accessToken: await this.signToken(user.id, user.email),
+      accessToken: await this.signToken(user.id, user.email,user.role),
     };
   }
 
@@ -62,7 +66,7 @@ export class AuthService {
         error: 'Unauthorized',
       });
     }
-    const payload = { sub: user.id, mobileNo: user.mobileNo };
+    const payload = { sub: user.id, mobileNo: user.mobileNo, role: user.role };
     const token = await this.jwt.signAsync(payload, {
       expiresIn: '15m',
       secret: JWT_SECRET_KEY,
@@ -70,14 +74,15 @@ export class AuthService {
     return {
       statusCode: 201,
       message: 'Login successful',
-      accessToken: await this.signToken(user.id, user.mobileNo.toString()),
+      accessToken: await this.signToken(user.id, user.mobileNo.toString(),user.role),
     };
   }
 
-  async signToken(userId : number , email : string) : Promise<string>{
+  async signToken(userId : number , email : string, role: string) : Promise<string>{
     const payload = {
       sub : userId,
-      email
+      email,
+      role,
     }
     return await this.jwt.signAsync(payload , {
       expiresIn : '15m',

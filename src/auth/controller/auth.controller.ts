@@ -1,12 +1,22 @@
-import { Body, Controller, Post, Req , UseGuards } from '@nestjs/common';
+import { Get,Body, Controller, Post, Req , UseGuards } from '@nestjs/common';
 import { AuthService } from '../service/auth.service';
 import { LoginByEmailDto } from 'src/user/dtos/loginByEmail.dto';
 import { LoginByMobileNoDto } from 'src/user/dtos/loginByMobileNo.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { Role } from 'src/user/roles/roles.enum';
+import { Roles } from '../decorators/roles.decorators';
+import { RolesGuard } from '../guards/roles.guard';
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
+
+  @Get('all')
+  @Roles(Role.ADMIN)
+  @UseGuards(AuthGuard('jwt'),RolesGuard)
+  findAllUsers() {
+    return this.authService.findAllUsers();
+  }
 
   @Post('/loginByEmail')
   async loginByEmail(@Body() loginByEmailDto: LoginByEmailDto) {
@@ -26,7 +36,7 @@ export class AuthController {
 
   @UseGuards(AuthGuard('jwt'))
   @Post('/updatepassword')
-  async updatePassword(@Req() req,
+  async updatePassword(@Req() req,  
    @Body('oldPassword')oldPassword : string , 
    @Body('newPassword')newPassword : string){
     return await this.authService.updateUserPassword(req.user.userId,oldPassword,newPassword);

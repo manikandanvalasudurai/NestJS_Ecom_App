@@ -11,55 +11,6 @@ export class UserService {
     constructor(@InjectRepository(User) private userRepository : Repository<User>,
                 private jwt : JwtService){}
 
-
-    async loginByEmail(email : string , password : string){
-        const user  = await this.userRepository.findOne({ where: { email } });
-        if(!user ){ //mail check
-            throw new UnauthorizedException({
-                statusCode: 401,
-                message: 'Invalid email or password',
-                error: 'Unauthorized',
-            });
-        }
-        const isMatch = await bcrypt.compare(password, user.password); 
-        if (!isMatch) {
-            throw new UnauthorizedException({
-                statusCode: 401,
-                message: 'Invalid email or password',
-                error: 'Unauthorized',
-            });
-        }
-        const payload = { id: user.id, email: user.email };
-        const token = this.jwt.sign(payload);
-        return {
-            accessToken : token,
-        };
-    }
-
-    async loginByMobileNo(mobileNo : number , password : string){
-        const user  = await this.userRepository.findOne({ where: { mobileNo } });
-        if(!user ){ //mobileNo check
-            throw new UnauthorizedException({
-                statusCode: 401,
-                message: 'Invalid email or password',
-                error: 'Unauthorized',
-            });
-        }
-        const isMatch = await bcrypt.compare(password, user.password); 
-        if (!isMatch) {
-            throw new UnauthorizedException({
-                statusCode: 401,
-                message: 'Invalid email or password',
-                error: 'Unauthorized',
-            });
-        }
-        const payload = { id : user.id , password : user.password};
-        const token = this.jwt.sign(payload);
-        return {
-             accessToken : token,
-        };
-    }
-
     async createUser(registerUserDto : RegisterUserDto){
         const existingEmail = await this.userRepository.findOne({
         where: { email: registerUserDto.email },
