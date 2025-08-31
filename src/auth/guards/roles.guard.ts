@@ -1,5 +1,5 @@
 // src/auth/guards/roles.guard.ts
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import { Injectable, CanActivate, ExecutionContext,ForbiddenException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { ROLES_KEY } from 'src/auth/decorators/roles.decorators'
 import { Role } from 'src/user/roles/roles.enum';
@@ -18,8 +18,10 @@ export class RolesGuard implements CanActivate {
     }
       // No roles were specified don’t enforce role check → allow access
     const { user } = context.switchToHttp().getRequest(); //access to details about the current request pipeline
-    return requiredRoles.includes(user.role);
-    
+    if (!user || !requiredRoles.includes(user.role)) {
+        throw new ForbiddenException('Only admins can access this resource');
+      }
+      return true; 
   }
 }
 
