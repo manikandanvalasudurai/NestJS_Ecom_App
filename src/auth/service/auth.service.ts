@@ -85,4 +85,24 @@ export class AuthService {
     });
   }
 
-}
+  async updateUserPassword(userId : number , oldPassword : string , newPassword : string){
+      const user = await this.userRepository.findOne({where : { id : userId }});
+      if(!user){
+        throw new UnauthorizedException({
+          statusCode : 201,
+          message : 'Invalid UserId',
+          error :  'User not exists'
+        });
+      }
+      const isMatch = await bcrypt.compare(oldPassword , user.password);
+      if(!isMatch){
+         throw new UnauthorizedException({
+          statusCode : 201,
+          message : 'wrong password',
+          error :  'please enter correct oldPassword'
+        });
+      }
+      user.password = await bcrypt.hash(newPassword,10);
+      await this.userRepository.save(user);
+    }
+  }
